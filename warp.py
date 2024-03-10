@@ -21,8 +21,8 @@ result_path = os.path.join(script_directory, 'result.csv')
 export_directory = os.path.join(script_directory, 'export')
 
 def create_ips():
+    total_ips_needed = 10
     c = 0
-    total_ips = sum(len(list(ipaddress.IPv4Network(cidr))) for cidr in warp_cidr)
 
     with open(ip_txt_path, 'w') as file:
         for cidr in warp_cidr:
@@ -30,8 +30,10 @@ def create_ips():
             for addr in ip_addresses:
                 c += 1
                 file.write(str(addr))
-                if c != total_ips:
+                if c != total_ips_needed:
                     file.write('\n')
+                else:
+                    return  # Stop generating more IPs once 10 are written
 
 if os.path.isfile(ip_txt_path):
     print("ip.txt exists.")
