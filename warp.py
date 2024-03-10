@@ -18,7 +18,7 @@ warp_cidr = [
 script_directory = os.path.dirname(__file__)
 ip_txt_path = os.path.join(script_directory, 'ip.txt')
 result_path = os.path.join(script_directory, 'result.csv')
-
+export_directory = os.path.join(script_directory, 'export')
 
 def create_ips():
     c = 0
@@ -33,14 +33,12 @@ def create_ips():
                 if c != total_ips:
                     file.write('\n')
 
-
 if os.path.isfile(ip_txt_path):
     print("ip.txt exists.")
 else:
     print('Creating ip.txt File.')
     create_ips()
     print('ip.txt File Created Successfully!')
-
 
 def arch_suffix():
     machine = platform.machine().lower()
@@ -55,7 +53,6 @@ def arch_suffix():
     else:
         raise ValueError("Unsupported CPU architecture")
 
-
 arch = arch_suffix()
 
 print("Fetch warp program...")
@@ -66,37 +63,28 @@ os.chmod("warp", 0o755)
 command = ["./warp", ">/dev/null", "2>&1"]
 print("Scanning ips...")
 process = subprocess.run(command, shell=False)
-# Wait for the process to finish
+
 if process.returncode != 0:
     print("Error: Warp execution failed.")
 else:
     print("Warp executed successfully.")
 
-
 def warp_ip():
     creation_time = os.path.getctime(result_path)
     formatted_time = datetime.datetime.fromtimestamp(creation_time).strftime("%Y-%m-%d %H:%M:%S")
-    config_prefixes = ''
+    config_prefixes = ''  
     with open(result_path, 'r') as csv_file:
-        next(csv_file)
-        ip1 = next(csv_file).split(',')[0]
-        ip2 = next(csv_file).split(',')[0]
-        ip3 = next(csv_file).split(',')[0]
-        ip4 = next(csv_file).split(',')[0]
-        config_prefix1 = f'{ip1}'
-        config_prefix2 = f'{ip2}'
-        config_prefix3 = f'{ip3}'
-        config_prefix4 = f'{ip4}'
-        config_prefixes += config_prefix1 + '\n' + config_prefix2 + '\n' + config_prefix3 + '\n' + config_prefix4
+        next(csv_file)  # Skip header
+        for line in csv_file:
+            ip = line.split(',')[0]
+            config_prefixes += f'{ip}\n'
     return config_prefixes, formatted_time
 
-
 configs = warp_ip()[0]
-export_directory = os.path.join(script_directory, 'export')
 os.makedirs(export_directory, exist_ok=True)
 export_file_path = os.path.join(export_directory, 'warp-ip')
-with open(export/warp-ip, 'w') as op:
-    op.write(f"{configs}")
+with open(export_file_path, 'w') as op:
+    op.write(configs)
 
 os.remove(ip_txt_path)
 os.remove(result_path)
