@@ -81,19 +81,16 @@ def warp_ip():
         ip2 = next(csv_file).split(',')[0]
         ip3 = next(csv_file).split(',')[0]
         ip4 = next(csv_file).split(',')[0]
-        config_prefix1 = f'warp://{ip1}?ifp=10-20&ifps=40-100&ifpd=10-20#🇮🇷 Warp&&detour=warp://{ip2}?ifp=10-20&ifps=40-100&ifpd=10-20#🇩🇪 Warp'
-        config_prefix2 = f'warp://{ip3}?ifp=10-20&ifps=40-100&ifpd=10-20#🇮🇷 Warp&&detour=warp://{ip4}?ifp=10-20&ifps=40-100&ifpd=10-20#🇩🇪 Warp'
-        config_prefixes += config_prefix1 + '\n' + config_prefix2
+        config_prefix1 = f'{ip1}
+        config_prefix2 = f'{ip2}
+        config_prefix3 = f'{ip3}
+        config_prefix4 = f'{ip4}
+        config_prefixes += config_prefix1 + '\n' + config_prefix2 + '\n' + config_prefix3 + '\n' + config_prefix4
     return config_prefixes, formatted_time
 
-title = "//profile-title: base64:" + base64.b64encode('WARP➡SUB{3yed}'.encode('utf-8')).decode('utf-8') + "\n"
-update_interval = "//profile-update-interval: 1\n"
-sub_info = "//subscription-userinfo: upload=0; download=0; total=10737418240000000; expire=2546249531\n"
-profile_web = "//profile-web-page-url: https://github.com/3yed-61\n"
-last_modified = "//last update on: " + warp_ip()[1] + "\n"
 configs = warp_ip()[0]
-with open('export/hiddify-warp-sub', 'w') as op:
-    op.write(f"{title}{update_interval}{sub_info}{profile_web}{last_modified}{configs}")
+with open('export/warp-ip', 'w') as op:
+    op.write(f"{configs}")
 
 os.remove(ip_txt_path)
 os.remove(result_path)
