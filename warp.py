@@ -33,7 +33,7 @@ def create_ips():
                 if c != total_ips_needed:
                     file.write('\n')
                 else:
-                    return  # Stop generating more IPs once 10 are written
+                    return  
 
 if os.path.isfile(ip_txt_path):
     print("ip.txt exists.")
