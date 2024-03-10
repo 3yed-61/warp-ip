@@ -3,7 +3,6 @@ import platform
 import subprocess
 import os
 import datetime
-import base64
 
 warp_cidr = [
     '162.159.192.0/24',
@@ -42,6 +41,7 @@ else:
     create_ips()
     print('ip.txt File Created Successfully!')
 
+
 def arch_suffix():
     machine = platform.machine().lower()
     if machine.startswith('i386') or machine.startswith('i686'):
@@ -54,6 +54,7 @@ def arch_suffix():
         return 's390x'
     else:
         raise ValueError("Unsupported CPU architecture")
+
 
 arch = arch_suffix()
 
@@ -71,25 +72,30 @@ if process.returncode != 0:
 else:
     print("Warp executed successfully.")
 
+
 def warp_ip():
     creation_time = os.path.getctime(result_path)
     formatted_time = datetime.datetime.fromtimestamp(creation_time).strftime("%Y-%m-%d %H:%M:%S")
-    config_prefixes = ''  
+    config_prefixes = ''
     with open(result_path, 'r') as csv_file:
         next(csv_file)
         ip1 = next(csv_file).split(',')[0]
         ip2 = next(csv_file).split(',')[0]
         ip3 = next(csv_file).split(',')[0]
         ip4 = next(csv_file).split(',')[0]
-        config_prefix1 = f'{ip1}
-        config_prefix2 = f'{ip2}
-        config_prefix3 = f'{ip3}
-        config_prefix4 = f'{ip4}
+        config_prefix1 = f'{ip1}'
+        config_prefix2 = f'{ip2}'
+        config_prefix3 = f'{ip3}'
+        config_prefix4 = f'{ip4}'
         config_prefixes += config_prefix1 + '\n' + config_prefix2 + '\n' + config_prefix3 + '\n' + config_prefix4
     return config_prefixes, formatted_time
 
+
 configs = warp_ip()[0]
-with open('export/warp-ip', 'w') as op:
+export_directory = os.path.join(script_directory, 'export')
+os.makedirs(export_directory, exist_ok=True)
+export_file_path = os.path.join(export_directory, 'warp-ip')
+with open(export/warp-ip, 'w') as op:
     op.write(f"{configs}")
 
 os.remove(ip_txt_path)
